@@ -4,7 +4,8 @@ from read_hand_landmarks import read_hands
 import pandas as pd
 import numpy as np
 from cropper import read_and_crop
-with open('body_language.pkl', 'rb') as f:
+MODEL_NAME = "ASL_model.pkl"
+with open(MODEL_NAME, 'rb') as f:
     model = pickle.load(f)
 cap=cv2.VideoCapture(0)
 while cap.isOpened:

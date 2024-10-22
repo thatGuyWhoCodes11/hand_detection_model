@@ -9,9 +9,11 @@ from sklearn.metrics import accuracy_score # Accuracy metrics
 import pickle
 import numpy as np
 import os
-if "body_language.pkl" in os.listdir():
-    os.remove("body_language.pkl")
-df=pd.read_csv("new_coords.csv")
+PKL_FILE_NAME = "ASL_model.pkl"
+LANDMARKS_FILE = "ASL_dataset.csv"
+if PKL_FILE_NAME in os.listdir():
+    os.remove(PKL_FILE_NAME)
+df=pd.read_csv(LANDMARKS_FILE)
 # df = df[df['class'].isin(["alef","baA","tha","ta"])]
 x = df.drop('class',axis=1)
 y = df['class']
@@ -45,5 +47,5 @@ print(accuracy_score(y_test,y_pred))
 #         results.append(str(round(proba[np.argmax(proba)],2)))
 #     f.write(str(results))
 
-with open('body_language.pkl', 'wb') as f:
+with open(PKL_FILE_NAME, 'wb') as f:
     pickle.dump(fittedlr, f)
