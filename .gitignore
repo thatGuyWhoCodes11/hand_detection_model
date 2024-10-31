@@ -1,6 +1,9 @@
 venv
 __pycache__
 body_language.pkl
-twoHands.jpg
+twoHands.*
 test.py
 proto.py
+Archive
+actions
+socket_testing.py
