@@ -5,11 +5,12 @@ import base64
 from io import BytesIO
 from PIL import Image
 import json
+import cv2
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 s.bind(("localhost",9090))
 s.listen(10)
 s.settimeout(3)
-print("connected and ready!")
+print("a client has connected")
 while True:
     try:
         conn, addr = s.accept()
@@ -25,6 +26,7 @@ while True:
         frame=base64.b64decode(data["base64Image"])
         img=Image.open(BytesIO(frame))
         img=np.asarray(img)
+        img=cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
         drawn_image,prediction,prediction_proba=predict_hand(img,data["arabic_mode"])
         drawn_image=Image.fromarray(drawn_image)
         buffer = BytesIO()
