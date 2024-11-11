@@ -39,8 +39,12 @@ def read_and_crop(image):
     if not results:
         drawn_image = drawn_image[250:h-250, 250:w-250]
         return drawn_image, None
-    coords = results.multi_hand_landmarks[0]
-    array_coords = np.array([[coord.x, coord.y] for coord in coords.landmark])
+    higher_hand = get_higher_hand(results)
+    if higher_hand["coords"][0].y > 0.5:
+        drawn_image = drawn_image[250:h-250, 250:w-250]
+        return drawn_image, None
+    array_coords = np.array([[coord.x, coord.y]
+                            for coord in higher_hand["coords"]])
     x = array_coords[:, 0]
     y = array_coords[:, 1]
     factor_max_x = np.max(x)
@@ -51,10 +55,11 @@ def read_and_crop(image):
     x_max_size = int(min(w, factor_max_x*w+200))
     y_min_size = int(max(0, factor_min_y*h-200))
     x_min_size = int(max(0, factor_min_x*w-200))
-    print("{} {} {} {}".format(factor_max_y, h, factor_max_x, w))
     # print("{},{}".format(y_max_size, x_max_size))
-    _, results = read_hands(
-        image[y_min_size:y_max_size, x_min_size:x_max_size])
+    image = image[y_min_size:y_max_size, x_min_size:x_max_size]
+    if higher_hand["handedness"] == "Left":
+        image = cv2.flip(image, 1)
+    _, results = read_hands(image)
     if not results:
         drawn_image = drawn_image[250:h-250, 250:w-250]
         return drawn_image, None
@@ -67,3 +72,14 @@ def read_and_crop(image):
     # drawn_image=draw_landmarks(drawn_image,coords)
     drawn_image = drawn_image[250:h-250, 250:w-250]
     return drawn_image, coords
+
+
+def get_higher_hand(hands):
+    if len(hands.multi_hand_landmarks) == 1:
+        return {"coords": hands.multi_hand_landmarks[0].landmark, "handedness": hands.multi_handedness[0].classification[0].label}
+    hand0_height, hand1_height = hands.multi_hand_landmarks[
+        0].landmark[0].y, hands.multi_hand_landmarks[1].landmark[0].y
+    print("hand1:{}\nhand2:{}\nhand1Higher:{}".format(
+        hand0_height, hand1_height, hand0_height > hand1_height))
+    higher_hand = hands[0] if hand0_height > hand1_height else hands[1]
+    return {"coords": higher_hand.multi_hand_landmarks[0].landmark, "handedness": higher_hand.multi_handedness[0].classification[0].label}
