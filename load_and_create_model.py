@@ -9,8 +9,8 @@ from sklearn.metrics import accuracy_score # Accuracy metrics
 import pickle
 import numpy as np
 import os
-PKL_FILE_NAME = "ASL_model.pkl"
-LANDMARKS_FILE = "ASL_dataset.csv"
+PKL_FILE_NAME = "ArSL_model.pkl"
+LANDMARKS_FILE = "ArSL_dataset.csv"
 if PKL_FILE_NAME in os.listdir():
     os.remove(PKL_FILE_NAME)
 df=pd.read_csv(LANDMARKS_FILE)
@@ -19,7 +19,7 @@ x = df.drop('class',axis=1)
 y = df['class']
 X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=1234)
 pipelines = {
-    'lr':make_pipeline(StandardScaler(), LogisticRegression(n_jobs=-1,penalty="l2",C=0.1)),
+    'lr':make_pipeline(StandardScaler(), LogisticRegression(n_jobs=-1)),
     'rc':make_pipeline(StandardScaler(), RidgeClassifier()),
     'rf':make_pipeline(StandardScaler(), RandomForestClassifier(n_jobs=-1)),
     'gb':make_pipeline(StandardScaler(), GradientBoostingClassifier()),

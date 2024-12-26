@@ -40,7 +40,7 @@ def read_and_crop(image):
         drawn_image = drawn_image[250:h-250, 250:w-250]
         return drawn_image, None
     higher_hand = get_higher_hand(results)
-    if higher_hand["coords"][0].y > 0.5:
+    if higher_hand["coords"][0].y > 0.7:
         drawn_image = drawn_image[250:h-250, 250:w-250]
         return drawn_image, None
     array_coords = np.array([[coord.x, coord.y]

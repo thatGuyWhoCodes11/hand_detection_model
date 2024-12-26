@@ -35,7 +35,6 @@ def predict_hand(image,ARABIC_MODE):
         body_language_prob = model.predict_proba(X)[0]
         prediction_proba=round(body_language_prob[np.argmax(body_language_prob)],2)
         prediction=hand_prediction.split(' ')[0]
-        print(str(model.predict(X))+"\n"+str(model.predict_proba(X)))
         cv2.putText(drawn_image, 'CLASS'
                     , (95,12), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
         

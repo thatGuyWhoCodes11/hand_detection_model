@@ -43,6 +43,8 @@ def conn_thread(conn):
             buffer = BytesIO()
             drawn_image.save(buffer,format='JPEG')
             base64Image=base64.b64encode(buffer.getvalue()).decode("ascii")
+            with open("log.txt","w") as file:
+                file.write("{} {}".format(prediction,prediction_proba))
             data = {"base64Image":base64Image,"prediction":prediction,"prediction_proba":prediction_proba}
             data=json.dumps(data)
             conn.sendall(str.encode(data+"\n"))
@@ -51,7 +53,7 @@ def conn_thread(conn):
         
 
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-s.bind(("192.168.0.144",9090))
+s.bind(("localhost",8080))
 s.listen(10)
 s.settimeout(None)
 print("Server has started")
